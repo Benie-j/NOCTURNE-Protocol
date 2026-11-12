@@ -13,6 +13,14 @@ jobs:
     container:
       image: barichello/godot-ci:4.4.1
     steps:
+      - name: Install required system tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          apt-get update
+          apt-get install -y --no-install-recommends curl unzip ca-certificates
+          command -v curl
+          command -v unzip
       - name: Checkout
         uses: actions/checkout@v4
 
