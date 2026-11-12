@@ -1,0 +1,30 @@
+name: Build NOCTURNE Android
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify project
+        run: godot --headless --path . --editor --quit
+      - name: Export Android APK
+        run: |
+          mkdir -p build
+          godot --headless --path . --export-debug "Android" build/NOCTURNE-debug.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NOCTURNE-Android-debug
+          path: build/NOCTURNE-debug.apk
+          if-no-files-found: error
+          retention-days: 14
